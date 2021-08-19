@@ -1,0 +1,33 @@
+version: "3"
+services:
+  backend:
+    image: golang
+    entrypoint: /docker-compose-entrypoint.sh
+    working_dir: /app
+    command: ["reflex", "-r", "\\.go$$", "-s", "--", "go", "run", "."]
+    volumes:
+      - ./docker/golang/docker-compose-entrypoint.sh:/docker-compose-entrypoint.sh
+      - ./backend:/app
+      - gomodcache:/go/pkg/mod
+    ports:
+      - 8000:8000
+  frontend:
+    image: node
+    entrypoint: /docker-compose-entrypoint.sh
+    command: ["yarn", "dev"]
+    working_dir: /app
+    environment: 
+      API_ENDPOINT: http://backend:8000
+    volumes:
+      - ./docker/node/docker-compose-entrypoint.sh:/docker-compose-entrypoint.sh
+      - ./frontend:/app
+      - _next:/app/.next
+      - node_modules:/app/node_modules
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+volumes:
+  gomodcache:
+  node_modules:
+  _next:
