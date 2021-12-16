@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend:
-    image: golang
+    image: golang:1.17-buster
     entrypoint: /docker-compose-entrypoint.sh
     working_dir: /app
     command: ["reflex", "-r", "\\.go$$", "-s", "--", "go", "run", "."]
@@ -12,7 +12,7 @@ services:
     ports:
       - 8000:8000
   frontend:
-    image: node
+    image: node:14-buster
     entrypoint: /docker-compose-entrypoint.sh
     command: ["yarn", "dev"]
     working_dir: /app
